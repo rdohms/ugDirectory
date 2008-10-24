@@ -197,7 +197,7 @@ class Initializer extends Zend_Controller_Plugin_Abstract
     public function initControllers()
     {
     	$this->_front->addControllerDirectory($this->_root . '/application/default/controllers', 'default');
-		$this->_front->addControllerDirectory($this->_root . '/application/parser/controllers', 'parser');
+		$this->_front->addControllerDirectory($this->_root . '/application/admin/controllers', 'admin');
     }
 
     public function initLogger(){
