@@ -1,9 +1,9 @@
 <?php
 /**
  * My new Zend Framework project
- * 
- * @author  
- * @version 
+ *
+ * @author Rafael Dohms <rdohms@gmail.com>
+ * @version
  */
 
 require_once 'Zend/Controller/Plugin/Abstract.php';
@@ -12,17 +12,18 @@ require_once 'Zend/Controller/Request/Abstract.php';
 require_once 'Zend/Controller/Action/HelperBroker.php';
 
 /**
- * 
- * Initializes configuration depndeing on the type of environment 
+ *
+ * Initializes configuration depndeing on the type of environment
  * (test, development, production, etc.)
- *  
- * This can be used to configure environment variables, databases, 
+ *
+ * This can be used to configure environment variables, databases,
  * layouts, routers, helpers and more
- *   
+ *
  */
 class Initializer extends Zend_Controller_Plugin_Abstract
 {
-    /**
+
+	/**
      * @var Zend_Config
      */
     protected static $_config;
@@ -46,9 +47,9 @@ class Initializer extends Zend_Controller_Plugin_Abstract
      * Constructor
      *
      * Initialize environment, root path, and configuration.
-     * 
-     * @param  string $env 
-     * @param  string|null $root 
+     *
+     * @param  string $env
+     * @param  string|null $root
      * @return void
      */
     public function __construct($env, $root = null)
@@ -57,48 +58,63 @@ class Initializer extends Zend_Controller_Plugin_Abstract
         if (null === $root) {
             $root = realpath(dirname(__FILE__) . '/../');
         }
+
         $this->_root = $root;
 
         $this->initPhpConfig();
-        
-        $this->_front = Zend_Controller_Front::getInstance();
-        
-        // set the test environment parameters
-        if ($env == 'test') {
-			// Enable all errors so we'll know when something goes wrong. 
-			error_reporting(E_ALL | E_STRICT);  
-			ini_set('display_startup_errors', 1);  
-			ini_set('display_errors', 1); 
 
-			$this->_front->throwExceptions(true);  
+        $this->_front = Zend_Controller_Front::getInstance();
+
+        // set the test environment parameters
+        if ($env == 'dev') {
+			// Enable all errors so we'll know when something goes wrong.
+			error_reporting(E_ALL | E_STRICT);
+			ini_set('display_startup_errors', 1);
+			ini_set('display_errors', 1);
+
+			$this->_front->throwExceptions(true);
         }
+
+        $this->initLogger();
     }
 
     /**
      * Initialize environment
-     * 
-     * @param  string $env 
+     *
+     * @param  string $env
      * @return void
      */
-    protected function _setEnv($env) 
+    protected function _setEnv($env)
     {
-		$this->_env = $env;    	
+		$this->_env = $env;
     }
-    
+
 
     /**
      * Initialize Data bases
-     * 
+     *
      * @return void
      */
     public function initPhpConfig()
     {
-    	
+    	// Load configuration file
+		$config = new Zend_Config_Ini(CONFIG_MAIN,CONFIG);
+		Zend_Registry::set("config",$config);
+
+		/* Report all errors directly to the screen for simple diagnostics in the dev environment */
+		error_reporting( $config->php->error_reporting );
+		ini_set('display_startup_errors', $config->php->display_startup_errors);
+		ini_set('display_errors', $config->php->display_errors);
+
+    	self::$_config = Zend_Registry::get('config');
+
+    	date_default_timezone_set(self::$_config->php->timezone);
+
     }
-    
+
     /**
      * Route startup
-     * 
+     *
      * @return void
      */
     public function routeStartup(Zend_Controller_Request_Abstract $request)
@@ -110,20 +126,26 @@ class Initializer extends Zend_Controller_Plugin_Abstract
         $this->initRoutes();
         $this->initControllers();
     }
-    
+
     /**
      * Initialize data bases
-     * 
+     *
      * @return void
      */
     public function initDb()
     {
-    	
+
+    	$config = Zend_Registry::get('config');
+		$db = Zend_Db::factory($config->database->adapter,$config->database->params);
+		Zend_Db_Table_Abstract::setDefaultAdapter($db);
+		Zend_Db_Table::setDefaultAdapter($db);
+		Zend_Registry::set('db',$db);
+
     }
 
     /**
      * Initialize action helpers
-     * 
+     *
      * @return void
      */
     public function initHelpers()
@@ -131,10 +153,10 @@ class Initializer extends Zend_Controller_Plugin_Abstract
     	// register the default action helpers
     	Zend_Controller_Action_HelperBroker::addPath('../application/default/helpers', 'Zend_Controller_Action_Helper');
     }
-    
+
     /**
-     * Initialize view 
-     * 
+     * Initialize view
+     *
      * @return void
      */
     public function initView()
@@ -144,37 +166,46 @@ class Initializer extends Zend_Controller_Plugin_Abstract
 		    'layoutPath' => $this->_root .  '/application/default/layouts',
 		    'layout' => 'main'
 		));
-    	
+
     }
-    
+
     /**
-     * Initialize plugins 
-     * 
+     * Initialize plugins
+     *
      * @return void
      */
     public function initPlugins()
     {
-    	
+
     }
-    
+
     /**
      * Initialize routes
-     * 
+     *
      * @return void
      */
     public function initRoutes()
     {
-    
+
     }
 
     /**
-     * Initialize Controller paths 
-     * 
+     * Initialize Controller paths
+     *
      * @return void
      */
     public function initControllers()
     {
     	$this->_front->addControllerDirectory($this->_root . '/application/default/controllers', 'default');
+		$this->_front->addControllerDirectory($this->_root . '/application/parser/controllers', 'parser');
+    }
+
+    public function initLogger(){
+    	if (PHP_SAPI == "cli"){
+    		Util_Log::loadLogger("cli");
+    	}else{
+    		Util_Log::loadLogger("web");
+    	}
     }
 }
 ?>
