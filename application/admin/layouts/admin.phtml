@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * Default Layout
+ *
+ * @author
+ * @version
+ */
+
+echo '<?xml version="1.0" encoding="UTF-8" ?>';
+echo $this->doctype()
+?>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<base href="http://localhost/web/groupdirectory/public/" />
+		<?php
+		echo $this->headTitle();
+	    echo $this->headScript();
+	    echo $this->headStyle();
+	    ?>
+
+		<link rel="stylesheet" type="text/css" href="styles/admin_main.css">
+	</head>
+
+	<body marginwidth="0" marginheight="0" onload="<?=$this->placeholder("onload")?>" onunload="<?=$this->placeholder("onunload")?>">
+		<div class="login"><?php echo $this->layout()->lUser->getName(); ?> | <a href="<?php echo $this->url(array('controller'=>'logout'))?>"><?php echo $this->translate("logout"); ?></a></div>
+		<div class="header">
+			<h1><?php echo $this->translate("PHPUGD: PHP User Group Directory"); ?></h1>
+			<h4><?php echo $this->placeholder('title') ?></h4>
+			<div class="menu">Add Group</div>
+		</div>
+
+	    <div id="main_content"><?php echo $this->layout()->content ?></div>
+		<br />
+		<br />
+		<div class="footer"><?php echo $this->translate("UGD Administration by Rafael Dohms")?></div>
+	</body>
+
+</html>

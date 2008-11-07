@@ -1,0 +1,52 @@
+<?php
+
+$this->placeholder('title')->set( $this->translate("Manage Group") );
+
+$this->headScript()->appendFile("http://maps.google.com/maps?file=api&amp;v=2&amp;key=abcdefg");
+$this->headScript()->appendFile("scripts/group-geo.js");
+
+$this->placeholder('onload')->set( "groupMap.initialize();" );
+$this->placeholder('onunload')->set( "GUnload();" );
+
+?>
+
+<div class="form_div left">
+	<dl class="zend_form">
+		<fieldset>
+			<legend><?php echo $this->translate("Group Information");?></legend>
+			<?php echo $this->form->getElement('name')->render(); ?>
+			<?php echo $this->form->getElement('logo')->render(); ?>
+			<?php echo $this->form->getElement('url')->render(); ?>
+			<?php echo $this->form->getElement('description')->render(); ?>
+		</fieldset>
+		<fieldset>
+			<legend><?php echo $this->translate("Management Information");?></legend>
+			<?php echo $this->form->getElement('user_responsible')->render(); ?>
+			<?php echo $this->form->getElement('admins')->render(); ?>
+		</fieldset>
+	</dl>
+</div>
+
+<div class="form_div right">
+
+	<dl class="zend_form">
+		<fieldset>
+			<legend><?php echo $this->translate("Location Information");?></legend>
+			<?php echo $this->form->getElement('scope')->render(); ?>
+			<dt><label for="name" class="optional"><?php echo $this->translate("Area of influence / Venues");?></label></dt>
+			<dd class="map_dd">
+				<div id="map_toolbar">
+					<input type="button" onclick="groupMap.initDrawPolygon();" value="Area" />
+					<input type="button" onclick="groupMap.addVenue();" value="Venue/HQ" />
+				</div>
+				<div id="map_canvas" style="width: 80%px; height: 350px"></div>
+			    <br />
+			    <?php $this->form->getElement('area_coords')->render(); ?>
+			    <div><?php echo $this->translate("This map demostrates the area your user group affects, that basically means the area where you expect your users to come from, so if you are a regionl group, i.e. Atlanta, create a polygon with Atlanta's area");?></div>
+			</dd>
+
+			<?php echo $this->form->getElement('venues')->render(); ?>
+		</fieldset>
+	</dl>
+
+</div>

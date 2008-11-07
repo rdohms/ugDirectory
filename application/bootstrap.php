@@ -5,7 +5,14 @@
  * @author
  * @version
  */
-set_include_path('.' . PATH_SEPARATOR . '../library' . PATH_SEPARATOR . '../application/default/models/' . PATH_SEPARATOR . get_include_path());
+set_include_path('.' . PATH_SEPARATOR
+				. '../library' . PATH_SEPARATOR
+				. '../library/doctrine' . PATH_SEPARATOR
+				. '../application/models/' . PATH_SEPARATOR
+				. '../application/models/generated' . PATH_SEPARATOR
+				. '../application/tables/' . PATH_SEPARATOR
+				. get_include_path()
+				);
 
 require_once 'Initializer.php';
 require_once "Zend/Loader.php";
@@ -13,6 +20,8 @@ require_once "Zend/Loader.php";
 
 // Set up autoload.
 Zend_Loader::registerAutoload();
+spl_autoload_register(array('Doctrine', 'autoload'));
+
 
 define("CONFIG_MAIN","../config/ugd.ini");
 include '../config/local.config.php';
@@ -21,7 +30,8 @@ include '../config/local.config.php';
 $frontController = Zend_Controller_Front::getInstance();
 
 // Change to 'production' parameter under production environemtn
-$frontController->registerPlugin(new Initializer('development'));
+$frontController->registerPlugin(new Initializer(CONFIG));
+$frontController->registerPlugin(new UGD_Login_Plugin());
 
 // Dispatch the request using the front controller.
 $frontController->dispatch();

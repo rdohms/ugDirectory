@@ -16,6 +16,9 @@ class Admin_IndexController extends Zend_Controller_Action
 	 */
     public function indexAction()
     {
-        // TODO Auto-generated IndexController::indexAction() action
+    	$user = UGD_Login_Manager::getInstance()->getActiveUser();
+    	$this->view->assign('user',$user);
+
     }
+
 }

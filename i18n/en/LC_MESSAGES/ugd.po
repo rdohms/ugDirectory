@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: UGD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-10-31 17:50-0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Rafael Dohms <rafael@rafaeldhms.com.br>\n"
+"Language-Team: UGAdm\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: BRAZIL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: /Users/rdohms/dev/web/groupdirectory/\n"
+"X-Poedit-KeywordsList: translate\n"
+"X-Poedit-SearchPath-0: application\n"
+
+#: application/admin/views/scripts/index/index.phtml:11
+msgid "Administration"
+msgstr ""
+
+#: application/admin/views/scripts/index/index.phtml:14
+#, php-format
+msgid "Hello, %s"
+msgstr ""
+
+#: application/admin/views/scripts/index/index.phtml:14
+msgid "logout"
+msgstr ""
+
+#: application/default/views/scripts/index/index.phtml:14
+msgid "Hello World"
+msgstr ""
+

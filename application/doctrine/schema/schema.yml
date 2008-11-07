@@ -1,0 +1,125 @@
+---
+Group:
+  tableName: groups
+  actAs:
+    Timestampable:
+      created:
+        name: created_at
+        type: timestamp
+      updated:
+        name: updated_at
+        type: timestamp
+  columns:
+    name: string(200)
+    description: string
+    logo: string(200)
+    url: string(150)
+    area_coords:
+      type: string(255)
+      name: area_coords as areaCoords
+    user_responsible:
+      type: integer
+      name: user_responsible as userResponsible
+    state: integer(1)
+    last_check:
+      type: timestamp
+      name: last_check as lastCheck
+    scope: string(15)
+  relations:
+    Admins:
+      type: many
+      class: Admin
+      local: id
+      foreign: group_id
+    Responsible:
+      type: one
+      local: user_responsible
+      foreign: id
+      class: User
+    Venues:
+      class: Venue
+      type: many
+      local: id
+      foreign: group_id
+    ActivitySources:
+      class: ActivitySource
+      type: many
+      local: id
+      foreign: group_id
+
+Admin:
+  tableName: admins
+  columns:
+    user_id:
+      type: integer
+      name: user_id as userId
+    group_id:
+      type: integer
+      name: group_id as groupId
+    role: string(100)
+  relations:
+    Group:
+      type: one
+      local: group_id
+      foreign: id
+    User:
+      local: user_id
+      foreign: id
+
+Venue:
+  tableName: venues
+  columns:
+    group_id:
+      type: integer
+      name: group_id as groupId
+    name: string(50)
+    address: string
+    coords: string(50)
+    description: string
+  relations:
+    Group:
+      local: group_id
+      foreign: id
+
+ActivitySource:
+  tableName: activity_sources
+  columns:
+    group_id:
+      type: integer
+      name: group_id as groupId
+    atype: string(5)
+    target: string(100)
+  relations:
+    Group:
+      local: group_id
+      foreign: id
+    ActivityType:
+      local: atype
+      foreign: atype
+
+ActivityType:
+  tableName: activity_types  
+  columns:
+    atype:
+      type: string(5)
+      primary: true
+    name: string(60)
+    weight: integer(2)
+
+User:
+  tableName: users
+  columns:
+    id:
+      type: integer
+      primary: true
+    login: string(35)
+    nick: string(60)
+    name: string(80)
+    email: string(150)
+    url: string(200)
+    bio: string
+    level: string(3)
+  relations:
+    Group:
+      local: id
+      foreign: user_responsible
