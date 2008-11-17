@@ -218,5 +218,9 @@ class Initializer extends Zend_Controller_Plugin_Abstract
     	Zend_Registry::set('Zend_Translate', $translate);
 
     }
+
+    public function initAppCfg(){
+    	define(PRODUCT_NAME,$this->_config->app->name);
+    }
 }
 ?>

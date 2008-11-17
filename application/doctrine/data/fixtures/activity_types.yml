@@ -1,0 +1,9 @@
+ActivityType:
+  AtivityType_1:
+    atype: site
+    name: Site URL
+    weight: 1
+  ActivityType_2:
+    atype: mlist
+    name: Mailing List
+    weight: 2  

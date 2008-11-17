@@ -1,7 +1,7 @@
 BODY{
 	margin: 0px;
 	padding: 0px;
-	font-family: verdana;
+	font-family: Verdana,Arial;
 }
 
 .header{
@@ -10,7 +10,7 @@ BODY{
 	padding: 5px 10px;
 }
 .header H1{ margin: 5px 0px 5px 0px; font-size: 20px; padding:0px;}
-.header H4{ margin: 0px 0px 15px 0px; font-size: 11px; padding 0px;}
+.header H4{ margin: 0px 0px 15px 0px; font-size: 11px; padding: 0px;}
 
 .login{
 	font-size: 11px;
@@ -31,6 +31,7 @@ BODY{
 	border-top: 1px dashed #CCCCCC;
 	font-size: 9px;
 	padding: 3px 5px;
+	text-align:center;
 }
 
 #main_content{
@@ -52,56 +53,67 @@ BODY{
 .right{
 	float: right;
 }
+.bottom{
+	float: none;
+}
 
 
-	dl.zend dt, dd { min-height: 35px; }
-	dl.zend_form dt {
-		float: left;
-		clear: left;
-		text-align: left;
-		min-width: 120px;
-	}
-	dl.zend_form dt label.required { font-weight: bold; }
-	dl.zend_form dd {
-		float: left;
-		clear: right;
-		padding-left: 5px;
-	}
-	dl.zend_form dd ul.errors {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
-	
-	dl.zend_form dd ul.errors li {
-		float: left;
-		margin: 0 0.15em;
-		font-size: 12px;
-		color: #666666;
-	}
-	
-	dl.zend_form FIELDSET{
-		border: 0px;
-		border-top: 2px dashed #AAAAAA;
-		padding-bottom: 20px;
+dl.zend dt, dd { min-height: 35px; }
+dl.zend_form dt {
+	float: left;
+	clear: left;
+	text-align: left;
+	min-width: 120px;
+}
+dl.zend_form dt label.required { font-weight: bold; }
+dl.zend_form dd {
+	float: left;
+	clear: right;
+	padding-left: 5px;
+}
+dl.zend_form dd ul.errors {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
 
-	}
+dl.zend_form dd ul.errors li {
+	float: left;
+	margin: 0 0.15em;
+	font-size: 12px;
+	color: #666666;
+}
+
+dl.zend_form FIELDSET{
+	border: 0px;
+	border-top: 2px dashed #AAAAAA;
+	padding-bottom: 20px;
+
+}
+
+dl.zend_form FIELDSET LEGEND{
+	font-weight: bold;
+	color: #336699;
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+dl.zend_form dd.map_dd {
+	float: left;
+	clear: right;
+	margin-left: 0px;
+	padding: 10px 0 4px 0px;
+}
+
+#map_toolbar{ background:#AAAAAA url(../images/admin/barbg.png) repeat-x scroll 0 0; padding: 5px; border: 1px solid #AAAAAA; }
+#map_toolbar INPUT{height: 16px; width: 16px;  }
+#map_canvas{ border: 1px solid #000000;}
 	
-	dl.zend_form FIELDSET LEGEND{
-		font-weight: bold;
-		color: #336699;
-		font-size: 12px;
-		margin-bottom: 5px;
-	}
-	
-	dl.zend_form dd.map_dd {
-		float: left;
-		clear: right;
-		margin-left: 0px;
-		padding: 10px 0 4px 0px;
-	}
-	
-	#map_toolbar{ background:#AAAAAA url(../images/admin/barbg.png) repeat-x scroll 0 0; padding: 5px; border: 1px solid #AAAAAA; }
-	#map_toolbar INPUT{height: 16px; width: 16px;  }
-	#map_canvas{ border: 1px solid #000000;}
-	
+#vn_form_div{
+	position: absolute;
+	font-size: 10px;
+}
+
+#vn_form_div textarea{
+	width:80%;
+}

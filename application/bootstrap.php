@@ -2,9 +2,12 @@
 /**
  * My new Zend Framework project
  *
- * @author
- * @version
+ * @author Rafael Dohms <rdohms@gmail.com>
+ * @version 0.1 aplha
  */
+
+define('VERSION',"0.1 Alpha");
+
 set_include_path('.' . PATH_SEPARATOR
 				. '../library' . PATH_SEPARATOR
 				. '../library/doctrine' . PATH_SEPARATOR
@@ -36,4 +39,3 @@ $frontController->registerPlugin(new UGD_Login_Plugin());
 // Dispatch the request using the front controller.
 $frontController->dispatch();
 ?>
-
