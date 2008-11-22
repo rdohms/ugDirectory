@@ -20,6 +20,7 @@ echo $this->doctype();
 		
 		<script type="text/javascript" src="scripts/jquery.js"></script>
 		<script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="scripts/jplugins/json.js"></script>
 		<?php
 		echo $this->headTitle();
 	    echo $this->headScript();
@@ -31,6 +32,17 @@ echo $this->doctype();
 	</head>
 
 	<body marginwidth="0" marginheight="0" onload="<?=$this->placeholder("onload")?>" onunload="<?=$this->placeholder("onunload")?>">
+		
+		<?php 
+		
+		$messager = Zend_Controller_Action_HelperBroker::getHelper('flashMessenger');
+		$messages = $messager->getMessages();
+		var_dump($messages,$messager);
+		
+		
+		
+		?>
+		
 		<div class="login"><?php echo $this->layout()->lUser->getName(); ?> | <a href="<?php echo $this->url(array('controller'=>'logout'))?>"><?php echo $this->translate("logout"); ?></a></div>
 		<div class="header">
 			<h1><?php echo $this->translate("PHPUGD: PHP User Group Directory"); ?></h1>

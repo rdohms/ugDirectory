@@ -27,7 +27,7 @@ class Admin_VenueController extends Zend_Controller_Action {
 		$point->lng = array_shift($coords);
 		
 		$venue = new Venue();
-		$venue->groupId = NULL;
+		$venue->group_id = NULL;
 		$venue->name = $params['gid']."_".$params['vn_name'];
 		$venue->address = utf8_decode($params['vn_address']);
 		$venue->coords = $this->_helper->json->encodeJson($point);

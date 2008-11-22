@@ -148,6 +148,11 @@ function group(){
 		}
 	}
 	
+	this.parseAdmins = function(){
+		
+		$('#admins').val( this.admins.toString() );
+		
+	}
 	//constructor
 	this.initialize();
 }

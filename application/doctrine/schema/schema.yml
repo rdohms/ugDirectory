@@ -14,16 +14,10 @@ Group:
     description: string
     logo: string(200)
     url: string(150)
-    area_coords:
-      type: string(255)
-      name: area_coords as areaCoords
-    user_responsible:
-      type: integer
-      name: user_responsible as userResponsible
+    area_coords: string(255)
+    user_responsible: integer
     state: integer(1)
-    last_check:
-      type: timestamp
-      name: last_check as lastCheck
+    last_check: timestamp
     scope: string(15)
   relations:
     Admins:
@@ -50,12 +44,8 @@ Group:
 Admin:
   tableName: admins
   columns:
-    user_id:
-      type: integer
-      name: user_id as userId
-    group_id:
-      type: integer
-      name: group_id as groupId
+    user_id: integer
+    group_id: integer
     role: string(100)
   relations:
     Group:
@@ -69,10 +59,8 @@ Admin:
 Venue:
   tableName: venues
   columns:
-    group_id:
-      type: integer
-      name: group_id as groupId
-    name: string(50)
+    group_id: integer
+    name: string(200)
     address: string
     coords: string(50)
     description: string
@@ -84,9 +72,7 @@ Venue:
 ActivitySource:
   tableName: activity_sources
   columns:
-    group_id:
-      type: integer
-      name: group_id as groupId
+    group_id: integer
     atype: string(5)
     target: string(100)
   relations:

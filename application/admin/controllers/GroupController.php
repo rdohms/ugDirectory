@@ -37,19 +37,92 @@ class Admin_GroupController extends Zend_Controller_Action {
 
 		$this->buildForm("admin/group/save");
 		
+		$this->gForm->getElement('tmp_id')->setValue(Util_Guid::generate());
+		$this->gForm->getElement('url')->setValue('http://');
+		$this->gForm->getElement('user_responsible')->setValue(UGD_Login_Manager::getInstance()->getActiveUser()->getId());
 	
 	}
 
 	public function saveAction(){
 		
-		$this->buildForm();
+		$this->getRequest()->isPost();
+		$this->buildForm("admin/group/save");
 		
-		var_dump($this->gForm->getValues());
+		if ($this->gForm->isValid($_POST)){
+			$values = $this->gForm->getValues();
+		}
+
+		//Build Group Object
+		$group = new Group();
+		$group->fromArray($values);
+		
+		
+		//Upload Logo
+		if ( copy($values['logo'],Zend_Registry::get('config')->files->logo->dir. DIRECTORY_SEPARATOR . basename($values['logo'])) ){
+			$values['logo'] = Zend_Registry::get('config')->files->logo->dir. "/" . basename($values['logo']);
+		}
+		
+		//Convert polygon cordenates
+		preg_match_all("/\(([0-9\.\,\-\s]*)\)[\,]?/",$values['area_coords'],$rawcoords);
+		
+		foreach($rawcoords[1] as $coord){
+			$cvalues = explode(",",$coord);
+			$cobj = new stdClass();
+			$cobj->lat = trim($cvalues[0]);
+			$cobj->lng = trim($cvalues[1]);
+			
+			$coords[] = $cobj;
+		}
+		
+		$values['area_coords'] = json_encode($coords);
+		
+		//Register Administrators
+		$admins = explode(",",$values['admins']);
+		
+		foreach($admins as $adm){
+			if ($adm != ""){
+				$group->Admins[]->user_id = $adm;
+			}
+		}
+		
+		//Go through Activity Types
+		$actvTypes = Doctrine_Query::create()->from('ActivityType')->orderBy("weight")->execute();
+
+		foreach($actvTypes as $atype){
+			$atype_key = "atype_".$atype->atype;
+			
+			$aSource = new ActivitySource();
+			$aSource->atype = $atype->atype;
+			$aSource->target = $values[$atype_key];
+			
+			$group->ActivitySources[] = $aSource;
+		}		
+		
+		//Save Group
+		$group->save();
+		
+		//Grab pre-saved venues and tie group_id
+		$venues = Doctrine_Query::create()->from('Venue')->where("Venue.name LIKE ?",array($values['tmp_id'] . '%'))->execute();
+		
+		foreach ($venues as $venue){
+			
+			$venue->name = str_replace($values['tmp_id']."_","",$venue->name);
+			$venue->group_id = $group->id;
+			$venue->save();
+			
+		}
+		
+		$this->_helper->flashMessenger("Group added!");
+		
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();
 		
 	}
 
 	public function editAction(){
-
+			
+		$this->_helper->flashMessenger("Group added!");
+		$this->_helper->redirector('index');
 	}
 
 	public function viewAction(){
@@ -57,7 +130,7 @@ class Admin_GroupController extends Zend_Controller_Action {
 	}
 
 	public function listAction(){
-
+				$this->_helper->viewRenderer->setNoRender();
 	}
 	
 	
@@ -68,14 +141,15 @@ class Admin_GroupController extends Zend_Controller_Action {
 			  ->setMethod("POST");
 		
 		//Temp ID
-		$gform->addElement('hidden','tmp_id',array("value"=>Util_Guid::generate()));
+		$gform->addElement('hidden','tmp_id',array());
 		
 		$gform->addElement('text','name',array("label"=>"Group Name","required"=>true));
 		$gform->addElement('textarea','description',array("label"=>"Description","rows"=>5));
 		$gform->addElement('file','logo',array("label"=>"Logo"));
-		$gform->addElement('text','url',array("label"=>"Site","value"=>"http://"));
+		$gform->addElement('text','url',array("label"=>"Site"));
 		$gform->addElement('hidden','area_coords',array());
-		$gform->addElement('hidden','user_responsible',array("value"=>UGD_Login_Manager::getInstance()->getActiveUser()->getId()));
+		$gform->addElement('hidden','user_responsible',array());
+		$gform->addElement('hidden','admins',array());
 		
 		//Get Users
 		$users = Doctrine_Query::create()->from('User')->orderBy('name')->execute();
@@ -128,5 +202,3 @@ class Admin_GroupController extends Zend_Controller_Action {
 		
 	}
 }
-?>
-

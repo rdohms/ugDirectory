@@ -24,71 +24,76 @@ $this->placeholder('onload')->set( "initMap('group');" );
 $this->placeholder('onunload')->set( "GUnload();" );
 
 ?>
-<?= $this->form($this->form->getName(), false, array(
-    'action' => $this->form->getAction(),
-    'method' => $this->form->getMethod())) ?>
 
-<div class="form_div left">
-	<dl class="zend_form">
-		<fieldset>
-			<legend><?php echo $this->translate("Group Information");?></legend>
-			<?php echo $this->form->getElement('name')->render(); ?>
-			<?php echo $this->form->getElement('logo')->render(); ?>
-			<?php echo $this->form->getElement('url')->render(); ?>
-			<?php echo $this->form->getElement('description')->render(); ?>
-		</fieldset>
-		<fieldset>
-			<legend><?php echo $this->translate("Management Information");?></legend>
-			<dt><label for="name" class="optional"><?php echo $this->translate("Responsible User");?></label></dt>
-			<dd>
-				<?php echo UGD_Login_Manager::getInstance()->getActiveUser()->getName() ?>
-				
-			</dd>
-			<?php echo $this->form->getElement('admins_add')->render(); ?><dd> <input type="button" onclick="group.addAdmin()" value="Add" /></dd>
-			<dt></dt>
-			<dd>
-				<ul id="admins_list"></ul>
-			</dd>
-		</fieldset>
-	</dl>
-</div>
+<form name="<?= $this->form->getName(); ?>" action="<?= $this->form->getAction(); ?>" method="<?= $this->form->getMethod(); ?>" enctype="multipart/form-data">
 
-<div class="form_div right">
+	<div class="form_div left">
+		<dl class="zend_form">
+			<fieldset>
+				<legend><?php echo $this->translate("Group Information");?></legend>
+				<?php echo $this->form->getElement('name')->render(); ?>
+				<?php echo $this->form->getElement('logo')->render(); ?>
+				<?php echo $this->form->getElement('url')->render(); ?>
+				<?php echo $this->form->getElement('description')->render(); ?>
+			</fieldset>
+			<fieldset>
+				<legend><?php echo $this->translate("Management Information");?></legend>
+				<dt><label for="name" class="optional"><?php echo $this->translate("Responsible User");?></label></dt>
+				<dd>
+					<?php echo UGD_Login_Manager::getInstance()->getActiveUser()->getName() ?>
+					
+				</dd>
+				<?php echo $this->form->getElement('admins_add')->render(); ?><dd> <input type="button" onclick="group.addAdmin()" value="Add" /></dd>
+				<dt></dt>
+				<dd>
+					<ul id="admins_list"></ul>
+				</dd>
+			</fieldset>
+		</dl>
+	</div>
+	
+	<div class="form_div right">
+	
+		<dl class="zend_form">
+			<fieldset>
+				<legend><?php echo $this->translate("Location Information");?></legend>
+				<?php echo $this->form->getElement('scope')->render(); ?>
+				<dt><label for="name" class="optional"><?php echo $this->translate("Area of influence / Venues");?></label></dt>
+				<dd class="map_dd">
+					<div id="map_toolbar">
+						<input type="button" onclick="group.initDrawPolygon();" value="Area" />
+						<input type="button" onclick="group.initAddVenue();" value="Venue/HQ" />
+					</div>
+					<div id="map_canvas" style="width: 80%px; height: 350px"></div>
+				    <br />
+				    <div><?php echo $this->translate("This map demostrates the area your user group affects, that basically means the area where you expect your users to come from, so if you are a regionl group, i.e. Atlanta, create a polygon with Atlanta's area");?></div>
+				</dd>
+			</fieldset>
+		</dl>
+	
+	</div>
+	
+	<div class="form_div left">
+		<dl class="zend_form">
+			<fieldset>
+				<legend><?php echo $this->translate("Activity Tracker");?></legend>
+				<p><?php echo $this->translate("The ".PRODUCT_NAME." has an internal automated system that will check you User Group for activity, so we can avoid having inactive groups listed after they have stopped their activities. This system will user the criteria below to check for activity, you need to qualify in at least one. In case you fail all the user responsible for the site will get 3 warnings via e-mail to flag his group as active. After this your group will be set to \"inactive\" until you return here to correct this.") ?></p>
+				<?php
+					foreach($this->form->actv->getElements() as $elem){
+						echo $elem->render();
+					}
+				?>
+			</fieldset>
+		</dl>
+	<?php echo $this->form->getElement('submit')->setAttrib('onclick','group.parseAdmins();')->render();	?>
+	</div>
 
-	<dl class="zend_form">
-		<fieldset>
-			<legend><?php echo $this->translate("Location Information");?></legend>
-			<?php echo $this->form->getElement('scope')->render(); ?>
-			<dt><label for="name" class="optional"><?php echo $this->translate("Area of influence / Venues");?></label></dt>
-			<dd class="map_dd">
-				<div id="map_toolbar">
-					<input type="button" onclick="group.initDrawPolygon();" value="Area" />
-					<input type="button" onclick="group.initAddVenue();" value="Venue/HQ" />
-				</div>
-				<div id="map_canvas" style="width: 80%px; height: 350px"></div>
-			    <br />
-			    <div><?php echo $this->translate("This map demostrates the area your user group affects, that basically means the area where you expect your users to come from, so if you are a regionl group, i.e. Atlanta, create a polygon with Atlanta's area");?></div>
-			</dd>
-		</fieldset>
-	</dl>
+<?php echo $this->form->getElement('user_responsible')->render(); ?>
+<?php echo $this->form->getElement('admins')->render(); ?>
+<?php echo $this->form->getElement('area_coords')->render(); ?>
+<?php echo $this->form->getElement('tmp_id')->render(); ?>
 
-</div>
-
-<div class="form_div left">
-	<dl class="zend_form">
-		<fieldset>
-			<legend><?php echo $this->translate("Activity Tracker");?></legend>
-			<p><?php echo $this->translate("The ".PRODUCT_NAME." has an internal automated system that will check you User Group for activity, so we can avoid having inactive groups listed after they have stopped their activities. This system will user the criteria below to check for activity, you need to qualify in at least one. In case you fail all the user responsible for the site will get 3 warnings via e-mail to flag his group as active. After this your group will be set to \"inactive\" until you return here to correct this.") ?></p>
-			<?php
-				foreach($this->form->actv->getElements() as $elem){
-					echo $elem->render();
-				}
-			?>
-		</fieldset>
-	</dl>
-<?php echo $this->form->getElement('submit')->render(); ?>
-</div>
-
+</form>
 
 <div id="vn_form_div">
 <?php echo $this->vForm; ?>
@@ -96,6 +101,4 @@ $this->placeholder('onunload')->set( "GUnload();" );
 <input type="button" onclick="group.createVenueMarker()" value="Add" />
 </dd>
 </div>
-<?php echo $this->form->getElement('user_responsible')->render(); ?>
-<?php echo $this->form->getElement('area_coords')->render(); ?>
-<?php echo $this->form->getElement('tmp_id')->render(); ?>
+

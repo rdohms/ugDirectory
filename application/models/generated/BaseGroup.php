@@ -7,10 +7,10 @@
  * @property string $description
  * @property string $logo
  * @property string $url
- * @property string $areaCoords
- * @property integer $userResponsible
+ * @property string $area_coords
+ * @property integer $user_responsible
  * @property integer $state
- * @property timestamp $lastCheck
+ * @property timestamp $last_check
  * @property string $scope
  * @property $Admins
  * @property $Responsible
@@ -26,10 +26,10 @@ abstract class BaseGroup extends Doctrine_Record
     $this->hasColumn('description', 'string', null, array('type' => 'string'));
     $this->hasColumn('logo', 'string', 200, array('type' => 'string', 'length' => '200'));
     $this->hasColumn('url', 'string', 150, array('type' => 'string', 'length' => '150'));
-    $this->hasColumn('area_coords as areaCoords', 'string', 255, array('type' => 'string', 'length' => '255'));
-    $this->hasColumn('user_responsible as userResponsible', 'integer', null, array('type' => 'integer'));
+    $this->hasColumn('area_coords', 'string', 255, array('type' => 'string', 'length' => '255'));
+    $this->hasColumn('user_responsible', 'integer', null, array('type' => 'integer'));
     $this->hasColumn('state', 'integer', 1, array('type' => 'integer', 'length' => '1'));
-    $this->hasColumn('last_check as lastCheck', 'timestamp', null, array('type' => 'timestamp'));
+    $this->hasColumn('last_check', 'timestamp', null, array('type' => 'timestamp'));
     $this->hasColumn('scope', 'string', 15, array('type' => 'string', 'length' => '15'));
   }
 

@@ -110,7 +110,8 @@ class Initializer extends Zend_Controller_Plugin_Abstract
     	$this->_config = Zend_Registry::get('config');
 
     	date_default_timezone_set($this->_config->php->timezone);
-
+    	
+    	Zend_Session::start();
     }
 
     /**
