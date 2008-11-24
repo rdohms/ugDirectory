@@ -64,6 +64,7 @@ Venue:
     address: string
     coords: string(50)
     description: string
+    icon: string(80)
   relations:
     Group:
       local: group_id

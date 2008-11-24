@@ -54,8 +54,6 @@ class Admin_GroupController extends Zend_Controller_Action {
 
 		//Build Group Object
 		$group = new Group();
-		$group->fromArray($values);
-		
 		
 		//Upload Logo
 		if ( copy($values['logo'],Zend_Registry::get('config')->files->logo->dir. DIRECTORY_SEPARATOR . basename($values['logo'])) ){
@@ -98,8 +96,13 @@ class Admin_GroupController extends Zend_Controller_Action {
 			$group->ActivitySources[] = $aSource;
 		}		
 		
+		//populate group
+		$group->fromArray($values);
+		
 		//Save Group
 		$group->save();
+		
+		var_dump($values, $group->toArray());
 		
 		//Grab pre-saved venues and tie group_id
 		$venues = Doctrine_Query::create()->from('Venue')->where("Venue.name LIKE ?",array($values['tmp_id'] . '%'))->execute();
@@ -113,6 +116,7 @@ class Admin_GroupController extends Zend_Controller_Action {
 		}
 		
 		$this->_helper->flashMessenger("Group added!");
+		//$this->_helper->redirector('index');
 		
 		$this->_helper->viewRenderer->setNoRender();
 		$this->_helper->layout->disableLayout();
@@ -130,6 +134,13 @@ class Admin_GroupController extends Zend_Controller_Action {
 	}
 
 	public function listAction(){
+		
+		$groups = Doctrine::getTable('Group')->findAll();
+		
+		foreach ($groups as $group){
+			var_dump($group->toArray());
+		}
+		
 				$this->_helper->viewRenderer->setNoRender();
 	}
 	

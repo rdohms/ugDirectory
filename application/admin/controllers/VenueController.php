@@ -31,7 +31,8 @@ class Admin_VenueController extends Zend_Controller_Action {
 		$venue->name = $params['gid']."_".$params['vn_name'];
 		$venue->address = utf8_decode($params['vn_address']);
 		$venue->coords = $this->_helper->json->encodeJson($point);
-		$venue->description = $params['coords'];
+		$venue->description = $params['vn_description'];
+		$venue->icon = $params['vn_icon'];
 		
 		try{
 			$venue->save();

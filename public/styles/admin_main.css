@@ -117,3 +117,18 @@ dl.zend_form dd.map_dd {
 #vn_form_div textarea{
 	width:80%;
 }
+
+#flash_div{
+	display: none;
+	width: 50%;
+	min-width:350px;
+	min-height: 20px;
+	position: absolute;
+	top: 5px;
+	left: 25%;
+	background-color: #FFFC9B;
+	border: 1px solid #000000;
+	text-align:center;
+	vertical-align:middle;
+	font-size: 0.8em;
+}

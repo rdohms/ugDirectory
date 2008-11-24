@@ -33,15 +33,7 @@ echo $this->doctype();
 
 	<body marginwidth="0" marginheight="0" onload="<?=$this->placeholder("onload")?>" onunload="<?=$this->placeholder("onunload")?>">
 		
-		<?php 
-		
-		$messager = Zend_Controller_Action_HelperBroker::getHelper('flashMessenger');
-		$messages = $messager->getMessages();
-		var_dump($messages,$messager);
-		
-		
-		
-		?>
+		<?php echo $this->partial('partial-flashmsg.phtml'); ?>
 		
 		<div class="login"><?php echo $this->layout()->lUser->getName(); ?> | <a href="<?php echo $this->url(array('controller'=>'logout'))?>"><?php echo $this->translate("logout"); ?></a></div>
 		<div class="header">

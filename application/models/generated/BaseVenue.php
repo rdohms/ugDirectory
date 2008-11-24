@@ -8,6 +8,7 @@
  * @property string $address
  * @property string $coords
  * @property string $description
+ * @property string $icon
  * @property $Group
  */
 abstract class BaseVenue extends Doctrine_Record
@@ -20,6 +21,7 @@ abstract class BaseVenue extends Doctrine_Record
     $this->hasColumn('address', 'string', null, array('type' => 'string'));
     $this->hasColumn('coords', 'string', 50, array('type' => 'string', 'length' => '50'));
     $this->hasColumn('description', 'string', null, array('type' => 'string'));
+    $this->hasColumn('icon', 'string', 80, array('type' => 'string', 'length' => '80'));
   }
 
   public function setUp()

@@ -144,7 +144,7 @@ function group(){
 		
 		if ($.inArray($('#admins_add').val(),this.admins) < 0){
 			this.admins[$('#admins_add').val()] = $('#admins_add').val();
-			$('#admins_list').append("<li>"+$('#admins_add').text()+"</li>");
+			$('#admins_list').append("<li>"+$('#admins_add').find('option').filter(':selected').text()+"</li>");
 		}
 	}
 	

@@ -1,0 +1,22 @@
+<?php 
+
+$messager = Zend_Controller_Action_HelperBroker::getHelper('flashMessenger');
+$messages = $messager->getMessages();
+
+$has_msg = (count($messages) > 0)? true:false;
+
+?>
+
+<?php if ($has_msg): ?>
+<div id="flash_div">
+	<?php foreach($messages as $msg):?>
+	<?php echo $msg; ?>
+	<?php endforeach; ?>
+</div>
+<script>
+	$(document).ready(function(){
+		$('#flash_div').show('slide', { direction: 'up'}, 1000);
+	});
+</script>
+
+<?php endif; ?>
