@@ -5,13 +5,13 @@ chdir( dirname(__FILE__) );
 /**
  * My new Zend Framework project
  *
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version
  */
 set_include_path('.' . PATH_SEPARATOR . '../library' . PATH_SEPARATOR . '../application/default/models/' . PATH_SEPARATOR . get_include_path());
 set_include_path('../application/default/tables/' . PATH_SEPARATOR . get_include_path());
 
-require_once 'Initializer.php';
+require_once '../library/UGD/Initializer.php';
 require_once "Zend/Loader.php";
 
 // Set up autoload.
@@ -44,7 +44,7 @@ $frontController->setResponse( new Zend_Controller_Response_Cli());
 $frontController->addModuleDirectory( "../application/" );
 
 // Change to 'production' parameter under production environemtn
-$frontController->registerPlugin(new Initializer(CONFIG));
+$frontController->registerPlugin(new UGD_initializer(CONFIG));
 
 // Dispatch the request using the front controller.
 $frontController->dispatch();

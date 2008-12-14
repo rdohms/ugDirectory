@@ -3,7 +3,7 @@
 /**
  * IndexController - The default controller class
  *
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version
  */
 

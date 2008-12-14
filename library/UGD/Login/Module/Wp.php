@@ -19,11 +19,11 @@ class UGD_Login_Module_Wp implements UGD_Login_Module_Interface
 	private $controller;
 
 	public function __construct(&$manager){
+		
 		$this->_manager = $manager;
 		set_include_path( Zend_Registry::get('config')->login->module->wp->wpPath . PATH_SEPARATOR . get_include_path() );
 		global $wpdb;
 		@require_once('wp-config.php');
-
 	}
 
 	/**
@@ -31,7 +31,7 @@ class UGD_Login_Module_Wp implements UGD_Login_Module_Interface
 	 *
 	 */
 	public function getActiveUser() {
-		$wpuser = wp_get_current_user();
+		$wpuser = @wp_get_current_user();
 
 		//Find User in LocalDB
 		$user = Doctrine::getTable('User')->findOneById($wpuser->ID);

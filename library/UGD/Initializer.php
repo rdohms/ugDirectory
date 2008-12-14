@@ -20,7 +20,7 @@ require_once 'Zend/Controller/Action/HelperBroker.php';
  * layouts, routers, helpers and more
  *
  */
-class Initializer extends Zend_Controller_Plugin_Abstract
+class UGD_Initializer extends Zend_Controller_Plugin_Abstract
 {
 
 	/**
@@ -56,7 +56,7 @@ class Initializer extends Zend_Controller_Plugin_Abstract
     {
         $this->_setEnv($env);
         if (null === $root) {
-            $root = realpath(dirname(__FILE__) . '/../');
+            $root = realpath(dirname(__FILE__) . '/../../');
         }
 
         $this->_root = $root;
@@ -74,8 +74,11 @@ class Initializer extends Zend_Controller_Plugin_Abstract
 
 			$this->_front->throwExceptions(true);
         }
-
-        $this->initLogger();
+        //Call Evironment Config functions
+        $this->initPhpConfig();
+       	$this->initLogger();
+    	$this->initDb();
+//    	$this->initCache();
         $this->initI18N();
     }
 
@@ -98,8 +101,11 @@ class Initializer extends Zend_Controller_Plugin_Abstract
      */
     public function initPhpConfig()
     {
+    	
+    	@define('VERSION',"0.1 Alpha");
+    	
     	// Load configuration file
-		$config = new Zend_Config_Ini(CONFIG_MAIN,CONFIG);
+		$config = new Zend_Config_Ini("../config/ugd.ini",$this->_env);
 		Zend_Registry::set("config",$config);
 
 		/* Report all errors directly to the screen for simple diagnostics in the dev environment */
@@ -121,7 +127,6 @@ class Initializer extends Zend_Controller_Plugin_Abstract
      */
     public function routeStartup(Zend_Controller_Request_Abstract $request)
     {
-       	$this->initDb();
         $this->initHelpers();
         $this->initView();
         $this->initPlugins();
@@ -138,9 +143,13 @@ class Initializer extends Zend_Controller_Plugin_Abstract
     {
     	$dbConfig = $this->_config->database;
     	$dsn = $dbConfig->adapter."://".$dbConfig->params->username.":".$dbConfig->params->password."@".$dbConfig->params->host."/".$dbConfig->params->dbname;
-    	Doctrine_Manager::connection($dsn);
-    	Doctrine_manager::getInstance()->setAttribute('model_loading', 'conservative');
 
+    	Doctrine_Manager::connection($dsn);
+    	
+    	$manager = Doctrine_manager::getInstance();   	
+    	$manager->setAttribute('model_loading', 'conservative');
+    	
+    	Zend_Registry::set('conn', $manager->getCurrentConnection());
     }
 
     /**
@@ -167,10 +176,7 @@ class Initializer extends Zend_Controller_Plugin_Abstract
 		    'layout' => 'main'
 		));
 
-		$layoutController = new Util_Layout();
-		$layoutController->registerModuleLayout('admin',$this->_root .  '/application/admin/layouts','admin');
 
-		$this->_front->registerPlugin($layoutController,-999);
 
     }
 
@@ -181,7 +187,12 @@ class Initializer extends Zend_Controller_Plugin_Abstract
      */
     public function initPlugins()
     {
+    	$this->_front->registerPlugin(new UGD_Login_Plugin());
+    	
+    	$layoutController = new Util_Layout();
+		$layoutController->registerModuleLayout('admin',$this->_root .  '/application/admin/layouts','admin');
 
+		$this->_front->registerPlugin($layoutController,-999);
     }
 
     /**
@@ -191,7 +202,8 @@ class Initializer extends Zend_Controller_Plugin_Abstract
      */
     public function initRoutes()
     {
-
+    	$router = $this->_front->getRouter();
+    	$router->addRoute('group',new Zend_Controller_Router_Route("/group/view/:id",array("module"=>'default', 'controller'=>'group', 'action'=>'view')));
     }
 
     /**
@@ -207,9 +219,9 @@ class Initializer extends Zend_Controller_Plugin_Abstract
 
     public function initLogger(){
     	if (PHP_SAPI == "cli"){
-    		Util_Log::loadLogger("cli");
+    		Util_Log::loadLogger($this->_env."_cli");
     	}else{
-    		Util_Log::loadLogger("web");
+    		Util_Log::loadLogger($this->_env."web");
     	}
     }
 

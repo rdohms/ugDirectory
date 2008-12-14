@@ -3,7 +3,7 @@
 /**
  * venueController
  * 
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version 
  */
 

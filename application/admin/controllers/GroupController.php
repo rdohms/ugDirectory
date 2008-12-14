@@ -3,7 +3,7 @@
 /**
  * GroupController
  *
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version
  */
 

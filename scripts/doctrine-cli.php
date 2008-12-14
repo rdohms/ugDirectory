@@ -5,7 +5,7 @@ chdir( dirname(__FILE__) );
 /**
  * My new Zend Framework project
  *
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version
  */
 set_include_path('.' . PATH_SEPARATOR
@@ -16,7 +16,7 @@ set_include_path('.' . PATH_SEPARATOR
 				. get_include_path()
 				);
 
-require_once '../application/Initializer.php';
+require_once '../library/UGD/Initializer.php';
 require_once '../library/doctrine/Doctrine.php';
 require_once '../library/Zend/Config/Ini.php';
 

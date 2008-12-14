@@ -1,0 +1,35 @@
+<?php
+$this->headScript()->appendFile("http://maps.google.com/maps?file=api&amp;v=2&amp;key=".Zend_Registry::get('config')->geo->keys->google);
+$this->headScript()->appendFile("scripts/group.js");
+
+$this->placeholder('onload')->set( "initMap('group');" );
+$this->placeholder('onunload')->set( "GUnload();" );
+
+?>
+
+<div>
+	<h1><?php echo $this->group->name ?></h1>
+	<h4><?php echo $this->group->url ?></h4>
+</div>
+<div><img src="<?= $this->group->logo ?>" width="100"></div>
+<div>
+	<?= $this->group->description ?>
+</div>
+
+<div>
+	<?= $this->translate("Group Administration")?><br/>
+	<?= $this->translate("Responsible for information")?>: <?= $this->group->Responsible->name ?><br/>
+	<?= $this->translate("Managers")?>:<br/>
+	<ul>
+	<?php foreach($this->group->Admins as $admin): ?>
+	<li><?php echo $admin->User->name ?></li>
+	<?php endforeach;?>
+	</ul>
+</div>
+
+<div>
+<div id="map_canvas" style="width: 80%px; height: 350px"></div>
+</div>
+<?php 
+var_dump($this->group);
+?>

@@ -18,9 +18,7 @@ class UGD_Login_Plugin extends Zend_Controller_Plugin_Abstract
 
 		$module = $request->getModuleName();
 		$controller = $request->getControllerName();
-
 		$lgMngr = UGD_Login_Manager::getInstance();
-
 		if ($module == 'admin' && $controller != "logout"){
 
 			//Force Login
@@ -36,7 +34,6 @@ class UGD_Login_Plugin extends Zend_Controller_Plugin_Abstract
 			}
 
 		}
-
 		//globalize logged in user
 		Zend_Layout::getMvcInstance()->assign('lUser',$lgMngr->getActiveUser());
 

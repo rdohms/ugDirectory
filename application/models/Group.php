@@ -5,5 +5,16 @@
  */
 class Group extends BaseGroup
 {
+	public function setUp(){
 
+		parent::setUp();
+	
+		$this->hasMutator('logoSrc', 'getLogoSrc');
+	}
+	
+	
+	public function getLogoSrc(){
+		return $this->logo;
+	}
+	
 }

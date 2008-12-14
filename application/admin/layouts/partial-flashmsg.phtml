@@ -1,6 +1,6 @@
 <?php 
 
-$messager = Zend_Controller_Action_HelperBroker::getHelper('flashMessenger');
+$messager = Zend_Controller_Action_HelperBroker::getStaticHelper('flashMessenger');
 $messages = $messager->getMessages();
 
 $has_msg = (count($messages) > 0)? true:false;
@@ -15,7 +15,12 @@ $has_msg = (count($messages) > 0)? true:false;
 </div>
 <script>
 	$(document).ready(function(){
+		
 		$('#flash_div').show('slide', { direction: 'up'}, 1000);
+		$('#flash_div').dropShadow();
+
+		setTimeout('$("#flash_div").hide("slide", {direction: "up"}, 1000)',10000);
+		
 	});
 </script>
 

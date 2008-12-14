@@ -2,8 +2,8 @@
 
 $this->placeholder('title')->set( $this->translate("Manage Group") );
 
-$this->headScript()->appendFile("http://maps.google.com/maps?file=api&amp;v=2&amp;key=abcdefg");
-$this->headScript()->appendFile("scripts/group-geo.js");
+$this->headScript()->appendFile("http://maps.google.com/maps?file=api&amp;v=2&amp;key=".Zend_Registry::get('config')->geo->keys->google);
+$this->headScript()->appendFile("scripts/group.js");
 $this->headScript()->appendScript("
 	$(document).ready(function(){
     	$('#vn_form_div').dialog({
@@ -18,7 +18,7 @@ $this->headScript()->appendScript("
 		    } 
     	});
   	});
-");
+alert(window.location.host)");
 
 $this->placeholder('onload')->set( "initMap('group');" );
 $this->placeholder('onunload')->set( "GUnload();" );

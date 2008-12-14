@@ -3,7 +3,7 @@
 /**
  *
  *
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version
  */
 
@@ -40,7 +40,6 @@ class UGD_Login_Manager
 
 	public function loadLoginModule(){
 		$module = "UGD_Login_Module_".ucfirst(Zend_Registry::get('config')->login->module->name);
-
 		$this->_loginModule = new $module($this);
 	}
 

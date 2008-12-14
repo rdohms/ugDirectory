@@ -160,3 +160,4 @@ function group(){
 function initMap(instName){
 	eval( instName + " = new group();" );
 }
+

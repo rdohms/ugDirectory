@@ -3,7 +3,7 @@
 /**
  * LoginController
  *
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version
  */
 

@@ -2,11 +2,9 @@
 /**
  * IndexControllerTest - Test the default index controller
  * 
- * @author
+ * @author Rafael Dohms <rdohms@gmail.com>
  * @version 
  */
-require_once 'Zend/Test/PHPUnit/ControllerTestCase.php';
-require_once 'application/Initializer.php';
 
 /**
  * IndexController Test Case
@@ -26,7 +24,7 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 	 * Prepares the environment before running a test.
 	 */
 	public function appBootstrap() {
-		$this->frontController->registerPlugin ( new Initializer( 'test' ) );
+		$this->frontController->registerPlugin ( new UGD_initializer( CONFIG_TEST_ENV ) );
 	}
 	
 	/**
@@ -35,13 +33,6 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase {
 	protected function tearDown() {
 		// TODO Auto-generated FooControllerTest::tearDown()
 		parent::tearDown ();
-	}
-	
-	/**
-	 * Constructs the test case.
-	 */
-	public function __construct() {
-		// TODO Auto-generated constructor
 	}
 	
 	/**
