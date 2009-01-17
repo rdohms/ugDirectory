@@ -16,11 +16,20 @@ echo $this->doctype()
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<base href="http://localhost/web/groupdirectory/public/" />
+		
+		<script type="text/javascript" src="scripts/jquery.js"></script>
+		<script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="scripts/jplugins/json.js"></script>
+		<script type="text/javascript" src="scripts/jplugins/jquery.dropshadow.js"></script>
+		
 		<?php 
 		echo $this->headTitle();
 	    echo $this->headScript();
 	    echo $this->headStyle();
 	    ?>
+	    
+		<link rel="stylesheet" type="text/css" href="styles/admin_main.css">
+		<link rel="stylesheet" type="text/css" href="styles/jquery-ui-bluey.css">
 	</head>
 	
 	<body>

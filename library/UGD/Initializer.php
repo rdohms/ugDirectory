@@ -203,7 +203,9 @@ class UGD_Initializer extends Zend_Controller_Plugin_Abstract
     public function initRoutes()
     {
     	$router = $this->_front->getRouter();
-    	$router->addRoute('group',new Zend_Controller_Router_Route("/group/view/:id",array("module"=>'default', 'controller'=>'group', 'action'=>'view')));
+    	if (method_exists($router,'addRoute')){
+    		$router->addRoute('group',new Zend_Controller_Router_Route("/group/view/:id",array("module"=>'default', 'controller'=>'group', 'action'=>'view')));
+    	}
     }
 
     /**
@@ -215,6 +217,7 @@ class UGD_Initializer extends Zend_Controller_Plugin_Abstract
     {
     	$this->_front->addControllerDirectory($this->_root . '/application/default/controllers', 'default');
 		$this->_front->addControllerDirectory($this->_root . '/application/admin/controllers', 'admin');
+		$this->_front->addControllerDirectory($this->_root . '/application/cli/controllers', 'cli');
     }
 
     public function initLogger(){

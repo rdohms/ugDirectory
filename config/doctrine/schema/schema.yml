@@ -14,10 +14,11 @@ Group:
     description: string
     logo: string(200)
     url: string(150)
-    area_coords: string(255)
+    area_coords: string
     user_responsible: integer
     state: integer(1)
     last_check: timestamp
+    alert_count: integer(1)
     scope: string(15)
   relations:
     Admins:

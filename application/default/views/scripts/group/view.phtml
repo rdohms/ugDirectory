@@ -2,8 +2,20 @@
 $this->headScript()->appendFile("http://maps.google.com/maps?file=api&amp;v=2&amp;key=".Zend_Registry::get('config')->geo->keys->google);
 $this->headScript()->appendFile("scripts/group.js");
 
-$this->placeholder('onload')->set( "initMap('group');" );
-$this->placeholder('onunload')->set( "GUnload();" );
+$this->headScript()->appendScript("
+	$(document).ready(function(){
+    	initMap('group');
+    	
+    	var vertexes = ". $this->group->area_coords .";
+    	group.showArea(vertexes);
+    	
+    	group.showVenues(". json_encode($this->group->Venues->toArray()) .");
+  	});
+  	
+	$(document).unload(function(){
+    	GUnload();
+  	});
+");
 
 ?>
 
@@ -28,8 +40,18 @@ $this->placeholder('onunload')->set( "GUnload();" );
 </div>
 
 <div>
-<div id="map_canvas" style="width: 80%px; height: 350px"></div>
+<div id="map_canvas" style="width: 80%; height: 350px"></div>
 </div>
+
+<?php 
+
+//Load polygon and Venues
+$polygon = json_decode($this->group->area_coords);
+
+
+?>
+
+
 <?php 
 var_dump($this->group);
 ?>

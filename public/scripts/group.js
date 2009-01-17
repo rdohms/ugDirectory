@@ -57,7 +57,7 @@ function group(){
 			me.addVenue(overlay,latlng);
 		});
 		
-	}
+	};
 	
 	this.addVenue = function (overlay, latlng){
 		this.origLatLng = latlng;
@@ -67,7 +67,7 @@ function group(){
 	
 	this.callShow = function (response){
 		me.showVenueForm(response);
-	}
+	};
 	
 	this.showVenueForm = function (response){
 		
@@ -97,7 +97,7 @@ function group(){
 		$('#vn_form_div').dialog('open');
 		this.origLatLng = null;
 
-	}
+	};
 	
 	this.createVenueMarker = function(data){
 		
@@ -115,13 +115,13 @@ function group(){
 		me.map.addOverlay(marker);
 		
 		me.removeListeners();
-	}
+	};
 	
 	this.checkAdd = function(response){
 		
 		alert(response.msg);
 		
-	}
+	};
 	
 	this.removeListeners = function(){
 		
@@ -129,14 +129,14 @@ function group(){
 			GEvent.removeListener(this.events);
 			this.events = null;
 		}
-	}
+	};
 	
 	this.removePoly = function (){
 		if (this.poly != null){
 			this.map.removeOverlay(this.poly);
 			this.poly = null;
 		}
-	}
+	};
 	
 	this.admins = new Array();
 	
@@ -146,13 +146,60 @@ function group(){
 			this.admins[$('#admins_add').val()] = $('#admins_add').val();
 			$('#admins_list').append("<li>"+$('#admins_add').find('option').filter(':selected').text()+"</li>");
 		}
-	}
+	};
 	
 	this.parseAdmins = function(){
 		
 		$('#admins').val( this.admins.toString() );
 		
+	};
+	
+	
+	this.showArea = function(vertexes){
+		
+		var gArea = new GPolygon( new GLatLng(this.map.getCenter()), "#284283",5,1, "#92A4D3",0.4 );
+		
+		for(var i=0; i < vertexes.length; i++){
+			gArea.insertVertex(i, new GLatLng(vertexes[i].lat,vertexes[i].lng) );
+		}
+		
+		this.map.addOverlay(gArea);
+		this.poly = gArea;
+		
+	};
+	
+	this.showVenues = function (venues){
+		
+		for(var i=0; i < venues.length; i++){
+			point = new GLatLng( venues[i].coords.lat, venues[i].coords.lng, {icon:'default'} );
+			this.map.addOverlay( this.createMarkerVenues(point) );
+			
+		}
+	};
+	
+	this.createMarkerVenues = function(point){
+		
+		var marker = new GMarker(point);
+		
+		GEvent.addListener(marker, "click", function() {
+			
+			marker.openInfoWindowHtml("<b>Loading...</b>");
+			
+			var request = GXmlHttp.create();
+			request.open("GET", "/", true);
+			request.onreadystatechange = function() {
+				//marker.openInfoWindowHtml("resultado");//venues[i].name + "\n" + venues[i].address);
+			}
+			request.send(null);
+			
+          });
+		
+		return marker;
+		
 	}
+	
+	
+	
 	//constructor
 	this.initialize();
 }
