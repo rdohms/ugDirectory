@@ -35,6 +35,16 @@ class Cli_ActivityMonitorController extends Zend_Controller_Action {
 		$manager->init();
 		
 	}
+	
+	public function workerAction() {
+	    
+	    $args = Zend_Registry::get('args')->getRemainingArgs();
+		
+		$manager = new UGD_ActivityMonitor_Worker($args[0]);
+		
+		$manager->init();
+		
+	}
 
 }
 ?>

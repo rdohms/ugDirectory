@@ -10,7 +10,7 @@ class UGD_ActivityMonitor_Manager {
     private $workerCount;
 	private $groups              = array();
 	private $workers             = array();
-	private $workerPipes         = array();
+	private $workerPipes;//         = array();
 	
 	
 	private $pipeSpec 	         = array(
@@ -26,14 +26,14 @@ class UGD_ActivityMonitor_Manager {
 	 */
 	public function __construct() {
 		$this->handle = Util_Guid::generate();
-		$this->logger = Util_Log::get()->UGAMON();
+		$this->logger = Util_Log::get()->UGAMON_Mng();
 	}
 	
 	public function init(){
-		
+
 	    try{
 	        //Get Limit
-    		$this->workerCount = $this->getWorkerCount();
+    		$this->workerCount = (int) $this->getWorkerCount();
 
     		//Pickup Groups
     		$this->groups = $this->getGroups();
@@ -50,6 +50,8 @@ class UGD_ActivityMonitor_Manager {
 	        $this->logger->err($e->getMessage());
 	        echo("BOT Failure:". $e->getMessage());
 	    }
+	    
+	    $this->killWorkers();
 		
 	}
 	
@@ -97,25 +99,22 @@ class UGD_ActivityMonitor_Manager {
 		//overwrite worker count for custom tailored value
 		$this->workerCount = count($groups);
 		
-		return $groups;
+		return $groups->toArray(false);
 	    
 	}
 	
 	private function spawnWorkers(){
 
 	    for ($i=0; $i < $this->workerCount; $i++){
-			$processName = 'cli.php -m cli -c ActivityMonitor -a worker '.$this->handle.':'.$i;
-			$this->workers[$i] = proc_open("php ".$processName, $this->pipeSpec, $this->workerPipes[$i]);
-
-			if ($this->workers[$i] !== false && !is_null($this->workers[$i])){
 			
-    			//move streams to non-blocking
-    			if (!stream_set_blocking($this->workerPipes[$i][1],0)){
-    			    throw new Exception('Unable to set stream to non-blocking');
-    			}
-    			
-			}else {
-			    $this->logger->debug( 'exception!!' );
+	        $processName = CMDLINE.' -m cli -c ActivityMonitor -a worker '.$this->handle.':'.$i;
+	        $this->logger->debug($processName);
+	        $this->workers[$i] = proc_open("php ".$processName, $this->pipeSpec, $this->workerPipes[$i]);
+	        stream_set_blocking($this->workerPipes[$i][1],0);
+	        stream_set_blocking($this->workerPipes[$i][2],0);
+			
+			if ($this->workers[$i] === false || gettype($this->workerPipes[$i][1]) != 'resource'){
+			    $this->logger->err( 'Error at Worker creation' );
 			    throw new Exception('Unable to create Worker Bot');
 			}
 		}
@@ -124,46 +123,50 @@ class UGD_ActivityMonitor_Manager {
 	
 	private function processQueue(){
 	    
-	    do{
+	    while (!$this->isDone()){
+	        $this->logger->debug('Begin Listening');
 	        
 	        foreach($this->workers as $pipeId => $worker){
-	            try{
-	                $signal = $this->readWorker($pipeId);
 	            
-    	            switch ($signal->code){
-    	                case self::IDLE:
-    	                    
-    	                    //Pickup Group
-    	                    $group = array_shift($this->groups);
-    	                    $groupId = $group->getId();
-    	                    
-    	                    //Push to a worker
-    	                    try{
-    	                        $this->sendGroupToWorker($pipeId,$groupId);
-    	                    }catch (Exception $e){
-    	                        
-    	                        //return group to Queue
-    	                        $this->groups[] = $group;
-    	                        
-    	                    }
-    	                    break;
-    	                case self::DONE:
-    	                    $this->done++;
-    	                    break;
-    	            }
+	            $this->logger->debug('Listening to '.$pipeId);
 	            
-	            }catch (Exception $e){
-	                unset($this->workers[$pipeId]);
+                $signal = $this->readWorker($pipeId);
+                $this->logger->debug('Received: '.$signal->code);
+	            switch ($signal->code){
+	                case self::IDLE:
+	                    
+	                    //Pickup Group
+	                    $group = array_shift($this->groups);
+	                    
+	                    if ($group === null){
+	                        break;
+	                    }
+	                    
+	                    $groupId = $group['id'];
+	                    
+	                    //Push to a worker
+	                    try{
+	                        $this->sendGroupToWorker($pipeId,$groupId);
+	                    }catch (Exception $e){
+	                        //return group to Queue
+	                        $this->groups[] = $group;
+	                    }
+	                    break;
+	                case self::DONE:
+	                    $this->done++;
+	                    break;
 	            }
 	            
 	        }
 	        
-	    }while (!$this->isDone());
+	        sleep(5);
+	        
+	    }
 	    
 	}
 	
 	private function isDone(){
-	    
+
 	    if (count($this->workers) == 0){
 	        throw new Exception('Catastrophic Worker Failures');
 	    }
@@ -181,13 +184,15 @@ class UGD_ActivityMonitor_Manager {
 	    $read = fgets($pipe);
 	    
 	    if (!$read){
-	        throw new Exception("Unable to read from worker");
+	        return null;
 	    }else{
     	    //Process received command
-    	    $in = trim(fgets($pipe));
+    	    $in = trim($read);
+    	    $this->logger->debug(var_export($in,true));
     		$signal->code = substr($in,0,3);
     		$signal->data = substr($in,4);
 	    }
+	    
 	    return $signal;
 	}
 	
@@ -200,6 +205,15 @@ class UGD_ActivityMonitor_Manager {
 	        $this->logger->err($err);
 	        throw new Exception($err);
 	    }
+	    
+	}
+	
+	private function killWorkers(){
+	    
+	    foreach ($this->workers as $worker) {
+	    	proc_close($worker);
+	    }
+	    
 	    
 	}
 }
